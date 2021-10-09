@@ -1,14 +1,6 @@
 version: "3.2"
 services:
-  bootcamp-api-service:
-    build: .
-    restart: always
-    ports:
-      - 8080:8080
-    depends_on:
-      - mysql_db
-      - rabbitmq
-      
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
@@ -25,12 +17,16 @@ services:
     restart: always
     ports:
       - 3306:3306
+    user: root
     environment:
       MYSQL_DATABASE: bootcamp
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-      MYSQL_ROOT_PASSWORD: root     
-
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - bootcampvol:/var/lib/mysql
+    networks:
+        - rabbitmq_go_net
+volumes:
+  bootcampvol:
 networks:
   rabbitmq_go_net:
     driver: bridge
